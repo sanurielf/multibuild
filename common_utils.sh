@@ -428,8 +428,6 @@ function install_wheel {
     #     MANYLINUX_URL (optional, default "") (via pip_opts function)
     local wheelhouse=$(abspath ${WHEEL_SDIR:-wheelhouse})
     check_pip
-    # Upgrade pip
-    $PYTHON_EXE -mpip install --upgrade pip
     if [ -n "$TEST_DEPENDS" ]; then
         while read TEST_DEPENDENCY; do
             $PIP_CMD install $(pip_opts) $@ $TEST_DEPENDENCY
