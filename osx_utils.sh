@@ -10,16 +10,17 @@ MACPYTHON_URL=https://www.python.org/ftp/python
 MACPYTHON_PY_PREFIX=/Library/Frameworks/Python.framework/Versions
 WORKING_SDIR=working
 
-# As of 6 October 2021 - latest Python of each version with binary download
+# As of 19 Jun 2022 - latest Python of each version with binary download
 # available.
-# See: https://www.python.org/downloads/mac-osx/
+# See: https://www.python.org/downloads/macos/
 LATEST_2p7=2.7.18
 LATEST_3p5=3.5.4
 LATEST_3p6=3.6.8
 LATEST_3p7=3.7.9
 LATEST_3p8=3.8.10
-LATEST_3p9=3.9.7
-LATEST_3p10=3.10.0post2
+LATEST_3p9=3.9.13
+LATEST_3p10=3.10.5
+LATEST_3p11=3.11.0b3
 
 
 function check_python {
@@ -78,6 +79,8 @@ function fill_pyver {
         echo $LATEST_2p7
     elif [ $ver == 3 ] || [ $ver == "3.10" ]; then
         echo $LATEST_3p10
+    elif [ $ver == "3.11" ]; then
+        echo $LATEST_3p11
     elif [ $ver == "3.9" ]; then
         echo $LATEST_3p9
     elif [ $ver == "3.8" ]; then
@@ -440,7 +443,7 @@ function repair_wheelhouse {
 function install_pkg_config {
     # Install pkg-config avoiding error from homebrew
     # See :
-    # https://github.com/matthew-brett/multibuild/issues/24#issue-221951587
+    # https://github.com/multi-build/multibuild/issues/24#issue-221951587
     command -v pkg-config > /dev/null 2>&1 || brew install pkg-config
 }
 

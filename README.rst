@@ -19,7 +19,7 @@ https://anaconda.org/multibuild-wheels-staging for staging wheels to PyPI.
 Uploads to Anaconda
 *******************
 
-If you want to upload to Anaconda, and you don't need the extra storage space for nightly builds that Anaconda kindly donates to Numpy, Scipy etc, then you can do this with your own Anaconda organization.
+If you want to upload to Anaconda, and you don't need the extra storage space for nightly builds that Anaconda kindly donates to NumPy, SciPy etc, then you can do this with your own Anaconda organization.
 
 See https://github.com/MacPython/nipy-wheels for a simple example.
 
@@ -39,7 +39,7 @@ See https://github.com/MacPython/nipy-wheels for a simple example.
 
       travis encrypt -r MacPython/nipy-wheels ANACONDA_SECRET=ni-1234abcd-12ab-34dc-1234-d1e1f3a4b5c6
 
-  Note that ``MacPython/nipy-wheels`` is your Github organization/repository.  The encryption only applies to Travis-CI running against this repository.
+  Note that ``MacPython/nipy-wheels`` is your Github organization/repository.  The encryption only applies to Travis CI running against this repository.
 
 * Go to your `.travis.yml` file and add the output ``secure`` key.  This will
   look something like::
@@ -52,14 +52,14 @@ See https://github.com/MacPython/nipy-wheels for a simple example.
         # organization named in $ANACONDA_ORG
         - secure: "IqN7LjXWVBaijggUoB+ohjzFzH6nU0OyxznXEMgWoNxQJRiYXXKAt/Z5c4ldp9LUynefJO306M8foN4Gm8M8PNDlhjElzdOtIkGYtDKUXx7aXtrg8rPk1mzuM1F27er4Dbi7WFtpPClr8z8JKNNV50yeM1o2cXu4HgrPrRKgKk/2D8EQaPQlcOqul0O63D9AjVoW3EIG0aWEnZQQGfuGAPgyr0OS92LX2h1pcD2lNZHhqYmXmm5U0IwZmWL3Y0N7PO3VXcOCeIbiHAlJzhk4C4+86TT7DN+VhmfGyY/s61fOz47K+lEZLVqqeQki+HV75fti0XwYG7rjcSvDanNx+w2J/ogSLQpiNxZ0FZ+W8psXEaFUgFf7oXzRkW9gQ4KAsItEWHifq061ngr5AWLPLh+01LGP1Xg8wT5WEVUzBfD2uJPsy20DLcP9WGYa6cBNwtpqmUkdVgM3ZCPWlro7+v1kqxsKp91uh8SRKVlkD4mwbf0FnWxbNZ9v4Z9gs0pZoRclzL+/YcIcSTYAwiQRqaX7T0tpxaUZ0VYTMwCgpsufUX1idV1HV5+WKr9FUocoq+1RRW/JeXkisX9FRvem8cSGmnxB/hynlxoqzttCVMwtrKWPwxH4dHD+lavouho68Q7iBql1ZBZEhQy0O9NC1wr4Rg2CeDPZuzqVjmSPuXQ="
 
-  When Travis-CI runs, this causes the ``ANACONDA_SECRET`` environment variable
+  When Travis CI runs, this causes the ``ANACONDA_SECRET`` environment variable
   to contain the API key above.
 
   Also add this to your global environment variables::
 
       - ANACONDA_ORG="nipy"
 
-*  To upload from Travis-CI, add a clause like this to the end of your
+*  To upload from Travis CI, add a clause like this to the end of your
    ``.travis.yml``::
 
      after_success:
@@ -70,9 +70,9 @@ See https://github.com/MacPython/nipy-wheels for a simple example.
 
    ``wheelhouse/*.whl`` defines the files you want to upload.
 
-*   You might also want to build and upload from Appveyor.  To encrypt the API
+*   You might also want to build and upload from AppVeyor.  To encrypt the API
     key above, go to https://ci.appveyor.com/account/matthew-brett/settings
-    (where ``matthew-brett`` is the account from which your Appveyor job runs.
+    (where ``matthew-brett`` is the account from which your AppVeyor job runs.
     Click on "Encrypt YaML" on the left.  Type in your API key value (e.g.
     ``ni-1234abcd-12ab-34dc-1234-d1e1f3a4b5c6``) as the value to encrypt. Click "Encrypt" and note the text it suggests.  Now, at the top of your ``appveyor.yml`` file, add something like::
 
@@ -132,7 +132,7 @@ The Travis CI scripts are designed to build *and test*:
   where `X` is any valid Manylinux version: `1`, `2010`, `2014` or `_2_24`.
 * 32-bit ``manylinuxX_i686`` wheels, both narrow and wide Unicode builds
 
-You can currently build and test against Pythons 2.7, 3.5, 3.6, 3.7, 3.8 and 3.9
+You can currently build and test against Pythons 2.7, 3.5, 3.6, 3.7, 3.8, 3.9 and 3.10.
 
 The small innovation here is that you can test against Linux 32-bit builds, both
 wide and narrow Unicode Python 2 builds, which was not easy on the default
@@ -143,7 +143,7 @@ The AppVeyor setup is designed to build *and test*:
 * 64-bit Windows ``win_amd64`` wheels
 * 32-bit Windows ``win32`` wheels
 
-You can currently build and test against Pythons 2.7, 3.5, 3.6, 3.7, 3.8, 3.9
+You can currently build and test against Pythons 2.7, 3.5, 3.6, 3.7, 3.8, 3.9 and 3.10.
 
 *****************
 How does it work?
@@ -179,7 +179,7 @@ shell scripts listed above are available for your build and test.
 Build options are controlled mainly by the following environment
 variables:
 
-* ``MB_PYTHON_VER`` sets the Python version targetted: ``major.minor.patch``
+* ``MB_PYTHON_VER`` sets the Python version targeted: ``major.minor.patch``
   for CPython, or ``pypy-major.minor`` for PyPy.
 * ``MB_PYTHON_OSX_VER`` sets the minimum macOS SDK version for any C
   extensions. For CPython targets it may be set to 10.6 or 10.9, provided a
@@ -220,7 +220,7 @@ Build phase
 -----------
 
 Specify the Manylinux version to build for with the ``MB_ML_VER`` environment
-variable. The default version is ``1``.  Versions that are currently valid are:
+variable. The default version is ``2014``.  Versions that are currently valid are:
 
 * ``1`` corresponding to manylinux1 (see `PEP 513 <https://www.python.org/dev/peps/pep-0513>`_).
 * ``2010``  corresponding to manylinux2010 (see `PEP 571 <https://www.python.org/dev/peps/pep-0571>`_).
@@ -268,17 +268,23 @@ Test phase
 ----------
 
 Specify the version to test with the ``DOCKER_TEST_IMAGE`` environment
-variable. The default version is dependent on ``PLAT``:
+variable. The default version is dependent on ``MB_ML_LIBC`` and ``PLAT``.
 
-* ``matthewbrett/trusty:64``, for ``x86_64``
-* ``matthewbrett/trusty:32`` for ``i686``
-* ``multibuild/xenial_arm64v8`` for ``aarch64``
-* ``multibuild/xenial_ppc64le`` for ``ppc64le``
-* ``mutlibuild/xenial_s390x`` for ``s390x``
+When ``MB_ML_LIBC`` is ``musllinux``:
+
+* ``multibuild/alpine3.15_x86_64``,  when ``PLAT`` is ``x86_64``
+
+Otherwise:
+
+* ``multibuild/focal_x86_64``, when ``PLAT`` is ``x86_64``
+* ``matthewbrett/trusty:32`` when ``PLAT`` is ``i686`` (Yes, an older image for 32-bit)
+* ``multibuild/focal_arm64v8`` when ``PLAT`` is ``aarch64``
+* ``multibuild/focal_ppc64le`` when ``PLAT`` is ``ppc64le``
+* ``multibuild/focal_s390x`` when ``PLAT`` is ``s390x``
 
 Other valid values are any in https://hub.docker.com/orgs/multibuild/repositories,
 using the correct platform code. Alternatively, you can use the substitution
-pattern ``multibuild/xenial_{PLAT}`` in the ``.travis.yml`` file.
+pattern ``multibuild/focal_{PLAT}`` in the ``.travis.yml`` file.
 
 See ``multibuild/docker_test_wrap.sh``.
 
@@ -338,7 +344,7 @@ To use these scripts
 
 * Add this (here) repository as a submodule::
 
-    git submodule add https://github.com/matthew-brett/multibuild.git
+    git submodule add https://github.com/multi-build/multibuild.git
 
 * Add your own project repository as another submodule::
 
@@ -595,7 +601,7 @@ Multibuild development
 **********************
 
 The main multibuild repository is always at
-https://github.com/matthew-brett/multibuild
+https://github.com/multi-build/multibuild
 
 We try to keep the ``master`` branch stable and do testing and development
 in the ``devel`` branch.  From time to time we merge ``devel`` into ``master``.
