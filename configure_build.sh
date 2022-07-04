@@ -43,16 +43,6 @@ else
     # Strip all binaries after compilation.
     STRIP_FLAGS=${STRIP_FLAGS:-"-Wl,-strip-all"}
 
-    if [[ $PLAT == x86_64 ]]; then
-        ARCH="amd64"
-    elif [[ $PLAT == aarch64 ]]; then
-        ARCH="arm64"
-    else
-        echo "Invalid platform = '$PLAT'. Supported values are  'x86_64', 'aarch64'"
-        exit 1
-    fi
-
-    export ARCH="$ARCH"
     export CFLAGS="${CFLAGS:-$STRIP_FLAGS}"
     export CXXFLAGS="${CXXFLAGS:-$STRIP_FLAGS}"
     export FFLAGS="${FFLAGS:-$STRIP_FLAGS}"

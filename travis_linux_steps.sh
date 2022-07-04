@@ -101,6 +101,7 @@ function build_multilinux {
         -v $PWD:/io \
         -v $HOME:/parent-home \
         --platform linux/"$ARCH" \
+        --privileged \
         $docker_image /io/$MULTIBUILD_DIR/docker_build_wrap.sh
 }
 
