@@ -291,6 +291,7 @@ function clean_code {
     fill_submodule "$repo_dir"
     (cd $repo_dir \
         && git fetch origin \
+        && git fetch --tags \
         && git checkout $build_commit \
         && git clean -fxd \
         && git reset --hard \
