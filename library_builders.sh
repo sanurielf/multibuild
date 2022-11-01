@@ -13,7 +13,7 @@ OPENBLAS_LIB_URL="https://anaconda.org/multibuild-wheels-staging/openblas-libs"
 OPENBLAS_VERSION="${OPENBLAS_VERSION:-0.3.10}"
 # We use system zlib by default - see build_new_zlib
 ZLIB_VERSION="${ZLIB_VERSION:-1.2.10}"
-LIBPNG_VERSION="${LIBPNG_VERSION:-1.6.21}"
+LIBPNG_VERSION="${LIBPNG_VERSION:-1.6.37}"
 BZIP2_VERSION="${BZIP2_VERSION:-1.0.7}"
 FREETYPE_VERSION="${FREETYPE_VERSION:-2.11.0}"
 TIFF_VERSION="${TIFF_VERSION:-4.1.0}"
@@ -245,7 +245,24 @@ function build_lcms2 {
 }
 
 function build_giflib {
-    build_simple giflib $GIFLIB_VERSION https://downloads.sourceforge.net/project/giflib
+    local name=giflib
+    local version=$GIFLIB_VERSION
+    local url=https://downloads.sourceforge.net/project/giflib
+    if [ $(lex_ver $GIFLIB_VERSION) -lt $(lex_ver 5.1.5) ]; then
+        build_simple $name $version $url
+    else
+        local ext=tar.gz
+        if [ -e "${name}-stamp" ]; then
+            return
+        fi
+        local name_version="${name}-${version}"
+        local archive=${name_version}.${ext}
+        fetch_unpack $url/$archive
+        (cd $name_version \
+            && make -j4 \
+            && make install)
+        touch "${name}-stamp"
+    fi
 }
 
 function build_xz {
@@ -410,7 +427,7 @@ function build_netcdf {
 }
 
 function build_pcre {
-    build_simple pcre $PCRE_VERSION https://ftp.pcre.org/pub/pcre
+    build_simple pcre $PCRE_VERSION https://sourceforge.net/projects/pcre/files/pcre/${PCRE_VERSION}
 }
 
 function build_swig {
