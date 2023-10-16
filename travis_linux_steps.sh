@@ -94,7 +94,7 @@ function build_multilinux {
         -e MANYLINUX_URL="$MANYLINUX_URL" \
         -e BUILD_DEPENDS="$BUILD_DEPENDS" \
         -e USE_CCACHE="$USE_CCACHE" \
-        -e REPO_DIR="$repo_dir" \
+        -e REPO_DIR="$REPO_DIR" \
         -e PLAT="$PLAT" \
         -e MB_ML_VER="$MB_ML_VER" \
         -e MB_ML_LIBC="$libc" \
@@ -120,10 +120,14 @@ function install_run {
     local plat=${1:-${PLAT:-x86_64}}
     if [ -z "$DOCKER_TEST_IMAGE" ]; then
         if [ "$MB_ML_LIBC" == "musllinux" ]; then
-            local docker_image="multibuild/alpine3.16_$plat"
+        	# PLAT is the same as $plat,
+        	# unless $plat is "aarch64", in which case it becomes "arm64v8"
+            local docker_image="multibuild/alpine3.18_{PLAT}"
         elif [ "$plat" == i686 ]; then
             local docker_image="matthewbrett/trusty:32"
         else
+        	# PLAT is the same as $plat,
+        	# unless $plat is "aarch64", in which case it becomes "arm64v8"
             local docker_image="multibuild/focal_{PLAT}"
         fi
     else
