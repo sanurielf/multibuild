@@ -22,11 +22,11 @@ JPEGTURBO_VERSION="${JPEGTURBO_VERSION:-2.1.3}"
 OPENJPEG_VERSION="${OPENJPEG_VERSION:-2.1}"
 LCMS2_VERSION="${LCMS2_VERSION:-2.9}"
 GIFLIB_VERSION="${GIFLIB_VERSION:-5.1.3}"
-LIBWEBP_VERSION="${LIBWEBP_VERSION:-0.5.0}"
+LIBWEBP_VERSION="${LIBWEBP_VERSION:-1.4.0}"
 XZ_VERSION="${XZ_VERSION:-5.2.2}"
 LIBYAML_VERSION="${LIBYAML_VERSION:-0.2.2}"
 SZIP_VERSION="${SZIP_VERSION:-2.1.1}"
-HDF5_VERSION="${HDF5_VERSION:-1.10.5}"
+HDF5_VERSION="${HDF5_VERSION:-1.14.5}"
 LIBAEC_VERSION="${LIBAEC_VERSION:-1.0.4}"
 LZO_VERSION=${LZO_VERSION:-2.10}
 LZF_VERSION="${LZF_VERSION:-3.6}"
@@ -43,9 +43,9 @@ FLEX_VERSION=${FLEX_VERSION:-2.6.4}
 BISON_VERSION=${BISON_VERSION:-3.0.4}
 FFTW_VERSION=${FFTW_VERSION:-3.3.7}
 CFITSIO_VERSION=${CFITSIO_VERSION:-3450}
-OPENSSL_ROOT=${OPENSSL_ROOT:-openssl-1.1.1l}
+OPENSSL_ROOT=${OPENSSL_ROOT:-openssl-1.1.1w}
 # Hash from https://www.openssl.org/source/openssl-1.1.1?.tar.gz.sha256
-OPENSSL_HASH=${OPENSSL_HASH:-0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1}
+OPENSSL_HASH=${OPENSSL_HASH:-cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8}
 OPENSSL_DOWNLOAD_URL=${OPENSSL_DOWNLOAD_URL:-https://www.openssl.org/source}
 
 
@@ -167,7 +167,7 @@ function build_libjpeg_turbo {
     local cmake=$(get_modern_cmake)
     fetch_unpack https://download.sourceforge.net/libjpeg-turbo/libjpeg-turbo-${JPEGTURBO_VERSION}.tar.gz
     (cd libjpeg-turbo-${JPEGTURBO_VERSION} \
-        && $cmake -G"Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$BUILD_PREFIX -DCMAKE_INSTALL_LIBDIR=$BUILD_PREFIX/lib . \
+        && $cmake -G"Unix Makefiles" -DCMAKE_INSTALL_PREFIX=$BUILD_PREFIX -DCMAKE_INSTALL_LIBDIR=$BUILD_PREFIX/lib -DCMAKE_INSTALL_NAME_DIR=$BUILD_PREFIX/lib . \
         && make install)
 
     # Prevent build_jpeg
@@ -234,7 +234,7 @@ function build_openjpeg {
     fi
     local out_dir=$(fetch_unpack https://github.com/uclouvain/openjpeg/archive/${archive_prefix}${OPENJPEG_VERSION}.tar.gz)
     (cd $out_dir \
-        && $cmake -DCMAKE_INSTALL_PREFIX=$BUILD_PREFIX . \
+        && $cmake -DCMAKE_INSTALL_PREFIX=$BUILD_PREFIX -DCMAKE_INSTALL_NAME_DIR=$BUILD_PREFIX/lib . \
         && make install)
     touch openjpeg-stamp
 }
@@ -260,7 +260,7 @@ function build_giflib {
         fetch_unpack $url/$archive
         (cd $name_version \
             && make -j4 \
-            && make install)
+            && make install PREFIX=$BUILD_PREFIX)
         touch "${name}-stamp"
     fi
 }
@@ -311,9 +311,10 @@ function build_hdf5 {
     build_zlib
     # libaec is a drop-in replacement for szip
     build_libaec
-    local hdf5_url=https://support.hdfgroup.org/ftp/HDF5/releases
-    local short=$(echo $HDF5_VERSION | awk -F "." '{printf "%d.%d", $1, $2}')
-    fetch_unpack $hdf5_url/hdf5-$short/hdf5-$HDF5_VERSION/src/hdf5-$HDF5_VERSION.tar.gz
+    local hdf5_url=https://support.hdfgroup.org/releases/hdf5
+    local short=$(echo $HDF5_VERSION | awk -F "." '{printf "v%d_%d", $1, $2}')
+    local long=$(echo $HDF5_VERSION | awk -F "." '{printf "v%d_%d_%d", $1, $2, $3}')
+    fetch_unpack $hdf5_url/$short/$long/downloads/hdf5-$HDF5_VERSION.tar.gz
     (cd hdf5-$HDF5_VERSION \
         && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BUILD_PREFIX/lib \
         && ./configure --with-szlib=$BUILD_PREFIX --prefix=$BUILD_PREFIX \
@@ -341,14 +342,8 @@ function build_blosc {
     local cmake=$(get_modern_cmake)
     fetch_unpack https://github.com/Blosc/c-blosc/archive/v${BLOSC_VERSION}.tar.gz
     (cd c-blosc-${BLOSC_VERSION} \
-        && $cmake -DCMAKE_INSTALL_PREFIX=$BUILD_PREFIX . \
+        && $cmake -DCMAKE_INSTALL_PREFIX=$BUILD_PREFIX -DCMAKE_INSTALL_NAME_DIR=$BUILD_PREFIX/lib . \
         && make install)
-    if [ -n "$IS_MACOS" ]; then
-        # Fix blosc library id bug
-        for lib in $(ls ${BUILD_PREFIX}/lib/libblosc*.dylib); do
-            install_name_tool -id $lib $lib
-        done
-    fi
     touch blosc-stamp
 }
 

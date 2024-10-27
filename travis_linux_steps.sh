@@ -19,10 +19,13 @@ MB_PYTHON_VERSION=${MB_PYTHON_VERSION:-$TRAVIS_PYTHON_VERSION}
 
 function before_install {
     # Install a virtualenv to work in.
+    # Virtualenv package may not be installed on host Python.
+    python -m pip install virtualenv
     virtualenv --python=$PYTHON_EXE venv
     source venv/bin/activate
     python --version # just to check
-    pip install --upgrade pip wheel
+    # Tomli for pyproject.toml parsing, to get dependencies.
+    pip install --upgrade pip wheel tomli
 }
 
 function build_wheel {
@@ -122,7 +125,7 @@ function install_run {
         if [ "$MB_ML_LIBC" == "musllinux" ]; then
         	# PLAT is the same as $plat,
         	# unless $plat is "aarch64", in which case it becomes "arm64v8"
-            local docker_image="multibuild/alpine3.18_{PLAT}"
+            local docker_image="multibuild/alpine3.20_{PLAT}"
         elif [ "$plat" == i686 ]; then
             local docker_image="matthewbrett/trusty:32"
         else
